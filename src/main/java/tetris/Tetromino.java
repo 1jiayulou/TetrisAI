@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 
 public class Tetromino {
 
+    private static int idCounter = 0;
+
     private static final int[][][] SHAPES = {
             // I
             {{1, 1, 1, 1}},
@@ -20,18 +22,18 @@ public class Tetromino {
             // J
             {{0, 1}, {0, 1}, {1, 1}}
     };
-
     // Assign Different Color
     private static final Color[] COLORS = {
             Color.CYAN, Color.YELLOW, Color.PURPLE,
             Color.GREEN, Color.RED, Color.ORANGE, Color.BLUE
     };
-
+    private int id;
     private ShapeType type;       // 方块类型
     private int rotation;         // 当前旋转状态
     private int[][] shapeMatrix;  // 当前形状矩阵
     private Color color;          // 方块颜色
-    private int x,y;              // initial location
+    private int x,y;              // x 通常代表列坐标（column index），即从左到右的偏移量。y 通常代表行坐标（row index），即从上到下的偏移量。
+
 
     public Tetromino(ShapeType type) {
         this.type = type;
@@ -40,6 +42,7 @@ public class Tetromino {
         this.color = COLORS[type.ordinal()];
         this.x = 4;
         this.y = 0;
+        this.id = idCounter++;
     }
 
     public Color getColor() {
@@ -48,6 +51,14 @@ public class Tetromino {
 
     public int[][] getShapeMatrix() {
         return shapeMatrix;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ShapeType getType() {
+        return type;
     }
 
     public int getHeight() {

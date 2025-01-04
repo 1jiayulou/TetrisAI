@@ -30,6 +30,10 @@ public class TetrisGrid {
 
                     // 重叠检查
                     if (grid[y][x] == 1) {
+                        System.out.println(y+" "+x);
+                        printMove(shape);
+                        System.out.println("------------------------------");
+                        printMove(grid);
                         return false; // 与其他方块重叠
                     }
                 }
@@ -83,5 +87,13 @@ public class TetrisGrid {
     // 获取网格状态
     public int[][] getGrid() {
         return grid;
+    }
+
+    private void printMove(int[][] currentMatrix) {
+        for (int i = 0; i<currentMatrix.length; i++) {
+            for (int j = 0; j < currentMatrix[0].length; j++)
+                System.out.print(currentMatrix[i][j] + " ");
+            System.out.println();
+        }
     }
 }
