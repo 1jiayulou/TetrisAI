@@ -4,6 +4,8 @@
 
 ### Generate First Version auto robot
 
+![Tetris Demo](gif/tetrisV1.gif)
+
 - Operate two threads: one for the game engine and another for the robot.
 - Initial Approach
   - Each piece has at most 4 shapes, corresponding to its rotations. 
