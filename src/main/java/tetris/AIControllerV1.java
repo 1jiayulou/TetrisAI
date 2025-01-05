@@ -4,6 +4,7 @@ import javafx.application.Platform;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AIControllerV1 implements Runnable{
@@ -65,66 +66,38 @@ public class AIControllerV1 implements Runnable{
     }
 
     private void moveToBestDestination() {
-        int[][] temp = currentTetromino.getShapeMatrix();
-        int rotateTime = 0;
-        int[] pair = new int[]{currentGrid[0].length, -1};
+        int[] bestMove = {currentGrid[0].length, -1};
+        int bottom = 0;
+        int[][] bestShape = currentTetromino.getShapeMatrix();
+        for (int i = 0; i < 4; i++) {
+            int[][] rotatedShape = rotate(currentTetromino.getShapeMatrix(), i);
+            int[] move = getBestDestination(rotatedShape);
+            currentTetromino.setShapeMatrix(rotatedShape);
 
-        for (int i =0 ; i<4; i++) {
-            int[] currentBest = getBestDestination(temp);
-            if (TetrisMain.grid.isValidMove(currentTetromino, currentBest[0], currentBest[1]) && currentBest[1] >= pair[1]) {
-                rotateTime = i;
-                if (currentBest[1] == pair[1]) pair[0] = Math.min(pair[0], currentBest[0]);else
-                {
-                    pair[0] = currentBest[0];
-                    pair[1] = currentBest[1];
-                }
+            if (move[1] >= bestMove[1] && move[1]+rotatedShape.length >= bottom) {
+                bestMove = move;
+                bestShape = rotatedShape;
             }
-            temp = rotate(temp);
         }
-
-        if (rotateTime == 1) currentTetromino.rotate(); else if (rotateTime == 2) {
-            currentTetromino.rotate();
-            currentTetromino.rotate();
-        } else {
-            currentTetromino.rotate();
-            currentTetromino.rotate();
-            currentTetromino.rotate();
-        }
-
-        if (!TetrisMain.grid.isValidMove(currentTetromino, pair[0], pair[1])) {
-            printMove(currentTetromino.getShapeMatrix());
-            System.out.println("Something wrong" + rotateTime + " " + pair[0] + " " + pair[1]);
-            printMove(currentGrid);
-            currentTetromino.setPosition(4,0);
-        } else currentTetromino.setPosition(pair[0],pair[1]);
-
+        currentTetromino.setShapeMatrix(bestShape);
+        currentTetromino.setPosition(bestMove[0], bestMove[1]);
     }
 
-    private int[] getBestDestination(int[][] currentMatrix) {
-        int height = currentMatrix.length;
-        int width = currentMatrix[0].length;
-        int rows = currentGrid.length;       // 网格的行数
-        int cols = currentGrid[0].length;    // 网格的列数
 
-        for (int i = rows - height; i >= 0; i--) { // 从底部向上遍历
-            for (int j = 0; j <= cols - width; j++) { // 从左向右遍历
-                boolean h = true;
-                for (int x = 0; x < height; x++) {
-                    for (int y = 0; y < width; y++) {
-                        if ( (currentMatrix[x][y]==1) && (currentGrid[i + x][j + y]== 1)) { // 检查重叠
-                            h = false;
-                            break;
-                        }
-                    }
-                    if (!h) break;
-                }
-                if (h) {
-                    // TetrisMain.getCurrentTetromino().setPosition(j, i); // 设置方块位置
-                    return new int[]{j,i};
+    private int[] getBestDestination(int[][] shape) {
+        int rows = currentGrid.length;
+        int cols = currentGrid[0].length;
+        int height = shape.length;
+        int width = shape[0].length;
+
+        for (int i = rows - height; i >= 0; i--) {
+            for (int j = 0; j <= cols - width; j++) {
+                if (isValidPlacement(shape, i, j)) {
+                    return new int[]{j, i};
                 }
             }
         }
-        return new int[]{0,4};
+        return new int[]{0, 4};
     }
 
     private void printMove(int[][] currentMatrix) {
@@ -135,7 +108,26 @@ public class AIControllerV1 implements Runnable{
         }
     }
 
-    private int[][] rotate(int[][] matrix) {
+    private boolean isValidPlacement(int[][] shape, int row, int col) {
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+                if (shape[i][j] == 1 && currentGrid[row + i][col + j] == 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private int[][] rotate(int[][] matrix, int times) {
+        int[][] result = matrix;
+        for (int i = 0; i < times; i++) {
+            result = rotateOnce(result);
+        }
+        return result;
+    }
+
+    private int[][] rotateOnce(int[][] matrix) {
         int rows = matrix.length;
         int cols = matrix[0].length;
         int[][] rotated = new int[cols][rows];

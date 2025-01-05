@@ -30,10 +30,6 @@ public class TetrisGrid {
 
                     // 重叠检查
                     if (grid[y][x] == 1) {
-                        System.out.println(y+" "+x);
-                        printMove(shape);
-                        System.out.println("------------------------------");
-                        printMove(grid);
                         return false; // 与其他方块重叠
                     }
                 }

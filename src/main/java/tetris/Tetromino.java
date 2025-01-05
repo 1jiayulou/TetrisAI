@@ -2,6 +2,8 @@ package tetris;
 
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public class Tetromino {
 
     private static int idCounter = 0;
@@ -51,6 +53,12 @@ public class Tetromino {
 
     public int[][] getShapeMatrix() {
         return shapeMatrix;
+    }
+
+    public void setShapeMatrix(int[][] finalShape) {
+        int[][] temp = new int[finalShape.length][finalShape[0].length];
+        for (int j = 0; j<temp.length; j++) temp[j] = Arrays.copyOf(finalShape[j],finalShape[j].length);
+        shapeMatrix = temp;
     }
 
     public int getId() {
