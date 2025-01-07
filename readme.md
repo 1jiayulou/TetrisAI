@@ -1,10 +1,14 @@
 # Change Log
 
+![Tetris Demo](gif/tetrisV1.gif)
+
+## 2025.01.06
+
+Update the logic, check the destination could be reached.
+
 ## 2025.01.03
 
 ### Generate First Version auto robot
-
-![Tetris Demo](gif/tetrisV1.gif)
 
 - Operate two threads: one for the game engine and another for the robot.
 - Initial Approach
