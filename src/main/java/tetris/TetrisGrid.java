@@ -16,18 +16,15 @@ public class TetrisGrid {
     // 检查是否越界或重叠
     public boolean isValidMove(Tetromino tetromino, int newX, int newY) {
         int[][] shape = tetromino.getShapeMatrix();
-
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] == 1) { // 检查方块部分
                     int x = newX + col;
                     int y = newY + row;
-
                     // 边界检查
                     if (x < 0 || x >= cols || y < 0 || y >= rows) {
                         return false; // 超出边界
                     }
-
                     // 重叠检查
                     if (grid[y][x] == 1) {
                         return false; // 与其他方块重叠
